@@ -1,0 +1,95 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>nl.halteradar</groupId>
+  <artifactId>netex-java</artifactId>
+  <version>0.1.0</version>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <jaxb.version>4.0.5</jaxb.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>4.0.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>${jaxb.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+        <plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-shade-plugin</artifactId>
+  <version>3.6.0</version>
+  <executions>
+    <execution>
+      <phase>package</phase>
+      <goals>
+        <goal>shade</goal>
+      </goals>
+      <configuration>
+        <transformers>
+          <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+            <mainClass>nl.halteradar.App</mainClass>
+          </transformer>
+        </transformers>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+
+      <plugin>
+        <groupId>org.jvnet.jaxb</groupId>
+        <artifactId>jaxb-maven-plugin</artifactId>
+        <version>4.0.16</version>
+        <executions>
+          <execution>
+            <id>generate-netex</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+                <schemaDirectory>src/main/resources/xsd/netex</schemaDirectory>
+              <schemaIncludes>
+                <include>netex-nl-geen-constraints.xsd</include>
+              </schemaIncludes>
+
+              <generatePackage>nl.bisonnl.netex</generatePackage>
+              <generateDirectory>${project.build.directory}/generated-sources/xjc</generateDirectory>
+
+              <extension>true</extension>
+              <strict>false</strict>
+            </configuration>
+          </execution>
+      <execution>
+            <id>generate-chb</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+                <schemaDirectory>src/main/resources/xsd/chb</schemaDirectory>
+              <schemaIncludes>
+                <include>chb.842-msg.xsd</include>
+              </schemaIncludes>
+
+              <generatePackage>nl.bisonnl.chb</generatePackage>
+              <generateDirectory>${project.build.directory}/generated-sources/xjc</generateDirectory>
+
+              <extension>true</extension>
+              <strict>false</strict>
+            </configuration>
+          </execution>
+  </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
