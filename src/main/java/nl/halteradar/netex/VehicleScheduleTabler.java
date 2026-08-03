@@ -31,7 +31,7 @@ final class VehicleScheduleTabler extends CommonTabler<VehicleScheduleFrame> {
         }
 
         return new Table(dataset, "blocks", rows,
-                "dataset", "block_id", "version", "blockcode", "name", "description",
+                "dataset_id", "block_id", "version", "blockcode", "name", "description",
                 "preparationduration", "starttime", "starttimedayoffset",
                 "finishingduration", "endtime", "endtimedayoffset",
                 "startpoint_id", "endpoint_id");
@@ -50,7 +50,7 @@ final class VehicleScheduleTabler extends CommonTabler<VehicleScheduleFrame> {
         }
 
         return new Table(dataset, "blockvaliditycondition", rows,
-                "dataset", "block_id", "version", "validitycondition_id");
+                "dataset_id", "block_id", "version", "validitycondition_id");
     }
 
     Table blockDayTypes(VehicleScheduleFrame frame, String dataset) {
@@ -66,7 +66,7 @@ final class VehicleScheduleTabler extends CommonTabler<VehicleScheduleFrame> {
         }
 
         return new Table(dataset, "blockdaytypes", rows,
-                "dataset", "block_id", "version", "daytypes");
+                "dataset_id", "block_id", "version", "daytypes");
     }
 
     Table blockJourneys(VehicleScheduleFrame frame, String dataset) {
@@ -82,7 +82,7 @@ final class VehicleScheduleTabler extends CommonTabler<VehicleScheduleFrame> {
         }
 
         return new Table(dataset, "blockjourneys", rows,
-                "dataset", "block_id", "version", "journey_id");
+                "dataset_id", "block_id", "version", "vehiclejourney_id");
     }
 
     @Override

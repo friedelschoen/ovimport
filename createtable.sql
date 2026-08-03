@@ -2,16 +2,16 @@ CREATE SCHEMA IF NOT EXISTS :schema;
 SET search_path to :schema, public;
 
 CREATE TABLE IF NOT EXISTS datasets(
-  dataset text,
+  dataset_id text,
   feed_index text,
   filename text,
-  fromdate date,
-  todate date
+  from_date date,
+  to_date date
 );
 
 
 CREATE TABLE IF NOT EXISTS serviceclasses(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   serviceclass_id text NOT NULL,
   version text NOT NULL,
   type text NOT NULL,
@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS serviceclasses(
 );
 
 
-CREATE TABLE IF NOT EXISTS organisation(
-  dataset text NOT NULL,
+CREATE TABLE IF NOT EXISTS organisations(
+  dataset_id text NOT NULL,
   organisation_id text NOT NULL,
   version text NOT NULL,
   type text NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS organisation(
 
 
 CREATE TABLE IF NOT EXISTS vehicletypes(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   vehicletype_id text NOT NULL,
   version text NOT NULL,
   vehicletypecode text,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS vehicletypes(
 
 
 CREATE TABLE IF NOT EXISTS vehicletypecapacities(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   vehicletype_id text NOT NULL,
   capacity_id text NOT NULL
   -- PRIMARY KEY(dataset, vehicletype_id, capacity_id)
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS vehicletypecapacities(
 
 
 CREATE TABLE IF NOT EXISTS passengercapacities(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   capacity_id text NOT NULL,
   version text NOT NULL,
   fareclass text,
@@ -91,13 +91,13 @@ CREATE TABLE IF NOT EXISTS passengercapacities(
 
 
 CREATE TABLE IF NOT EXISTS vehicles(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   vehicle_id text NOT NULL,
   version text NOT NULL,
-  fromdate timestamp
+  from_date timestamp
   WITH
     time zone NOT NULL,
-    todate timestamp
+    to_date timestamp
   WITH
     time zone,
     registration text,
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS vehicles(
 
 
 CREATE TABLE IF NOT EXISTS routepoints(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   routepoint_id text NOT NULL,
   version text NOT NULL,
   point geometry(point, 4326) NOT NULL
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS routepoints(
 
 
 CREATE TABLE IF NOT EXISTS routelinks(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   routelink_id text NOT NULL,
   version text NOT NULL,
   from_routepoint_id text NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS routelinks(
 
 
 CREATE TABLE IF NOT EXISTS routes(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   route_id text NOT NULL,
   version text NOT NULL,
   line_id text NOT NULL,
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS routes(
 
 
 CREATE TABLE IF NOT EXISTS lines(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   line_id text NOT NULL,
   version text NOT NULL,
   lineplanningnumber text,
@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS lines(
 
 
 CREATE TABLE IF NOT EXISTS destinationdisplays(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   display_id text NOT NULL,
   version text NOT NULL,
   destinationcode text,
@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS destinationdisplays(
 
 
 CREATE TABLE IF NOT EXISTS destinationdisplayvariants(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   display_id text NOT NULL,
   version text NOT NULL,
   mediatype text NOT NULL,
@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS destinationdisplayvariants(
 
 
 CREATE TABLE IF NOT EXISTS scheduledstoppoints(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   stoppoint_id text NOT NULL,
   version text NOT NULL,
   userstopcode text,
@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS scheduledstoppoints(
 
 
 CREATE TABLE IF NOT EXISTS scheduledstoppointtariffzones(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   stoppoint_id text NOT NULL,
   version text NOT NULL,
   tariffzone text NOT NULL
@@ -219,7 +219,7 @@ CREATE TABLE IF NOT EXISTS scheduledstoppointtariffzones(
 
 
 CREATE TABLE IF NOT EXISTS stopassignments(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   assignment_id text NOT NULL,
   version text NOT NULL,
   stoppoint_id text NOT NULL,
@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS stopassignments(
 
 
 CREATE TABLE IF NOT EXISTS timingpoints(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   timingpoint_id text NOT NULL,
   version text NOT NULL,
   name text,
@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS timingpoints(
 
 
 CREATE TABLE IF NOT EXISTS timinglinks(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   timinglink_id text NOT NULL,
   version text NOT NULL,
   from_point_id text NOT NULL,
@@ -253,7 +253,7 @@ CREATE TABLE IF NOT EXISTS timinglinks(
 
 
 CREATE TABLE IF NOT EXISTS journeypatterns(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   journeypattern_id text NOT NULL,
   version text NOT NULL,
   name text,
@@ -271,7 +271,7 @@ CREATE TABLE IF NOT EXISTS journeypatterns(
 
 
 CREATE TABLE IF NOT EXISTS timedemandtypes(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   timedemandtype_id text NOT NULL,
   version text NOT NULL,
   type text NOT NULL,
@@ -285,7 +285,7 @@ CREATE TABLE IF NOT EXISTS timedemandtypes(
 
 
 CREATE TABLE IF NOT EXISTS notices(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   notice_id text NOT NULL,
   version text NOT NULL,
   name text,
@@ -295,18 +295,18 @@ CREATE TABLE IF NOT EXISTS notices(
 
 
 CREATE TABLE IF NOT EXISTS noticeassignments(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   assignment_id text NOT NULL,
   version text NOT NULL,
   notice_id text NOT NULL,
   object_id text NOT NULL,
-  view integer
+  view_index integer
   -- PRIMARY KEY(dataset, assignment_id, version)
 );
 
 
 CREATE TABLE IF NOT EXISTS stopareas(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   stoparea_id text NOT NULL,
   version text NOT NULL,
   userstopareacode text,
@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS stopareas(
 
 
 CREATE TABLE IF NOT EXISTS availabilityconditions(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   availabilitycondition_id text NOT NULL,
   version text NOT NULL,
   name text,
@@ -335,7 +335,7 @@ CREATE TABLE IF NOT EXISTS availabilityconditions(
 
 
 CREATE TABLE IF NOT EXISTS vehiclejourneys(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   vehiclejourney_id text NOT NULL,
   version text NOT NULL,
   type text NOT NULL,
@@ -354,7 +354,7 @@ CREATE TABLE IF NOT EXISTS vehiclejourneys(
 
 
 CREATE TABLE IF NOT EXISTS vehiclejourneyconditions(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   vehiclejourney_id text NOT NULL,
   version text NOT NULL,
   validitycondition_id text NOT NULL
@@ -363,7 +363,7 @@ CREATE TABLE IF NOT EXISTS vehiclejourneyconditions(
 
 
 CREATE TABLE IF NOT EXISTS daytypes(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   daytype_id text NOT NULL,
   version text NOT NULL,
   name text,
@@ -381,7 +381,7 @@ CREATE TABLE IF NOT EXISTS daytypes(
 
 
 CREATE TABLE IF NOT EXISTS daytypeassignments(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   daytypeassignment_id text NOT NULL,
   version text NOT NULL,
   date date NOT NULL,
@@ -391,7 +391,7 @@ CREATE TABLE IF NOT EXISTS daytypeassignments(
 
 
 CREATE TABLE IF NOT EXISTS blocks(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   block_id text NOT NULL,
   version text NOT NULL,
   blockcode text,
@@ -410,7 +410,7 @@ CREATE TABLE IF NOT EXISTS blocks(
 
 
 CREATE TABLE IF NOT EXISTS blockvaliditycondition(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   block_id text NOT NULL,
   version text NOT NULL,
   validitycondition_id text NOT NULL
@@ -419,7 +419,7 @@ CREATE TABLE IF NOT EXISTS blockvaliditycondition(
 
 
 CREATE TABLE IF NOT EXISTS blockjourneys(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   block_id text NOT NULL,
   version text NOT NULL,
   journey_id text NOT NULL
@@ -428,7 +428,7 @@ CREATE TABLE IF NOT EXISTS blockjourneys(
 
 
 CREATE TABLE IF NOT EXISTS blockdaytypes(
-  dataset text NOT NULL,
+  dataset_id text NOT NULL,
   block_id text NOT NULL,
   version text NOT NULL,
   daytypes text NOT NULL

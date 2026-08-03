@@ -67,8 +67,8 @@ public class NeTExTabler implements Function<FromFile<CompositeFrame>, Stream<Ta
                 toDate
         };
 
-        return new Table(composite.filename(), "datasets", Stream.<String[]>of(row), "dataset",
-                "filename", "fromdate", "todate");
+        return new Table(composite.filename(), "datasets", Stream.<String[]>of(row), "dataset_id",
+                "filename", "from_date", "to_date");
     }
 
     @Override

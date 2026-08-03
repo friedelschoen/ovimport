@@ -52,7 +52,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new Table(dataset, "serviceclasses", rows,
-                "dataset", "serviceclass_id", "version", "type", "name", "description", "image", "url", "color",
+                "dataset_id", "serviceclass_id", "version", "type", "name", "description", "image", "url", "color",
                 "textcolor");
     }
 
@@ -83,8 +83,8 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
             });
         }
 
-        return new Table(dataset, "organisation", rows,
-                "dataset", "organisation_id", "version", "type", "name", "shortname", "description");
+        return new Table(dataset, "organisations", rows,
+                "dataset_id", "organisation_id", "version", "type", "name", "shortname", "description");
     }
 
     private Table passengerCapacities(ResourceFrame frame, String dataset) {
@@ -112,7 +112,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new Table(dataset, "passengercapacities", rows,
-                "dataset", "capacity_id", "version", "fareclass", "total", "seating",
+                "dataset_id", "capacity_id", "version", "fareclass", "total", "seating",
                 "standing", "specialplace", "pushchair", "wheelchair");
     }
 
@@ -153,7 +153,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new Table(dataset, "vehicletypes", rows,
-                "dataset", "vehicletype_id", "version", "vehicletypecode", "branding", "name",
+                "dataset_id", "vehicletype_id", "version", "vehicletypecode", "branding", "name",
                 "shortname", "description", "euroclass", "reversingdirection",
                 "selfpropelled", "propulsiontype", "fueltype", "maximumrange",
                 "transportmode", "lowfloor", "liftorramp", "hoist",
@@ -180,7 +180,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new Table(dataset, "vehicletypecapacities", rows,
-                "dataset", "vehicletype_id", "capacity_id");
+                "dataset_id", "vehicletype_id", "capacity_id");
     }
 
     private Table vehicles(ResourceFrame frame, String dataset) {
@@ -201,7 +201,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new Table(dataset, "vehicles", rows,
-                "dataset", "vehicle_id", "version", "fromdate", "todate", "registration",
+                "dataset_id", "vehicle_id", "version", "from_date", "to_date", "registration",
                 "operationalnumber", "operator_id", "vehicletype_id");
     }
 

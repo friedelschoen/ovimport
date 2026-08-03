@@ -62,7 +62,7 @@ final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
         }
 
         return new Table(dataset, "daytypes", rows,
-                "dataset", "daytype_id", "version", "name", "shortname", "daysofweek",
+                "dataset_id", "daytype_id", "version", "name", "shortname", "daysofweek",
                 "weeksofmonth", "dayofyear", "holidaytypes", "seasons",
                 "tides", "dayevent", "crowding");
     }
@@ -81,7 +81,7 @@ final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
         }
 
         return new Table(dataset, "daytypeassignments", rows,
-                "dataset", "daytypeassignment_id", "version", "date", "daytype_id");
+                "dataset_id", "daytypeassignment_id", "version", "date", "daytype_id");
     }
 
     Table timebands(ServiceCalendarFrame frame, String dataset) {
@@ -97,7 +97,7 @@ final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
         }
 
         return new Table(dataset, "timebands", rows,
-                "dataset", "timeband_id", "version", "starttime", "endtime");
+                "dataset_id", "timeband_id", "version", "starttime", "endtime");
     }
 
     @Override

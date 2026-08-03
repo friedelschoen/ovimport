@@ -27,7 +27,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "routepoints", routePoints,
-                "dataset", "routepoint_id", "version", "point");
+                "dataset_id", "routepoint_id", "version", "point");
     }
 
     private Table routeLinks(ServiceFrame frame, String dataset) {
@@ -48,12 +48,12 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "routelinks", rows,
-                "dataset", "routelink_id", "version", "from_routepoint_id", "to_routepoint_id",
+                "dataset_id", "routelink_id", "version", "from_routepoint_id", "to_routepoint_id",
                 "distance", "linestring", "operational_context_id",
                 "responsibilityset_id");
     }
 
-    int order = 1;
+    OrderMap<String> routeOrder = new OrderMap<>();
 
     private Table routes(ServiceFrame frame, String dataset) {
         Stream<String[]> rows = Stream.empty();
@@ -72,7 +72,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
                                         refString(route.getLineRef()),
                                         text(route.getName()),
                                         val(route.getDirectionType()),
-                                        str(point.getOrder(), () -> Integer.toString(order++)),
+                                        routeOrder.getOrder(point.getId(), point.getOrder()).toString(),
                                         refString(point.getRoutePointRef()),
                                         refString(point.getOnwardRouteLinkRef()),
                                 });
@@ -80,7 +80,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "routes", rows,
-                "dataset", "route_id", "version", "line_id", "name", "direction",
+                "dataset_id", "route_id", "version", "line_id", "name", "direction",
                 "point_order", "routepoint_id", "onward_routelink_id");
     }
 
@@ -116,7 +116,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "destinationdisplays", rows,
-                "dataset", "display_id", "version", "destinationcode", "name", "sidetext",
+                "dataset_id", "display_id", "version", "destinationcode", "name", "sidetext",
                 "fronttext", "color", "textcolor", "vias");
     }
 
@@ -139,7 +139,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "destinationdisplayvariants", rows,
-                "dataset", "display_id", "version", "mediatype", "length", "name");
+                "dataset_id", "display_id", "version", "mediatype", "length", "name");
     }
 
     private Table scheduledStopPoints(ServiceFrame frame, String dataset) {
@@ -176,7 +176,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "scheduledstoppoints", rows,
-                "dataset", "stoppoint_id", "version", "userstopcode", "name", "point",
+                "dataset_id", "stoppoint_id", "version", "userstopcode", "name", "point",
                 "projected_routepoint_id", "stoparea_id", "alighting",
                 "boarding", "place");
     }
@@ -194,7 +194,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "scheduledstoppointtariffzones", rows,
-                "dataset", "stoppoint_id", "version", "tariffzone");
+                "dataset_id", "stoppoint_id", "version", "tariffzone");
     }
 
     private Table stopAreas(ServiceFrame frame, String dataset) {
@@ -219,7 +219,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "stopareas", rows,
-                "dataset", "stoparea_id", "version", "userstopareacode", "name", "publiccode", "place");
+                "dataset_id", "stoparea_id", "version", "userstopareacode", "name", "publiccode", "place");
     }
 
     private Table stopAssignments(ServiceFrame frame, String dataset) {
@@ -240,7 +240,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "stopassignments", rows,
-                "dataset", "assignment_id", "version", "stoppoint_id", "quay_id", "stopplace_id");
+                "dataset_id", "assignment_id", "version", "stoppoint_id", "quay_id", "stopplace_id");
     }
 
     private Table timingPoints(ServiceFrame frame, String dataset) {
@@ -264,7 +264,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "timingpoints", rows,
-                "dataset", "timingpoint_id", "version", "name", "point", "projected_routepoint_id");
+                "dataset_id", "timingpoint_id", "version", "name", "point", "projected_routepoint_id");
     }
 
     private Table timingLinks(ServiceFrame frame, String dataset) {
@@ -283,7 +283,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "timinglinks", rows,
-                "dataset", "timinglink_id", "version", "from_point_id", "to_point_id",
+                "dataset_id", "timinglink_id", "version", "from_point_id", "to_point_id",
                 "distance", "operational_context_id");
     }
 
@@ -391,7 +391,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "journeypatterns", rows,
-                "dataset", "journeypattern_id", "version", "name", "route_id", "direction",
+                "dataset_id", "journeypattern_id", "version", "name", "route_id", "direction",
                 "destinationdisplay_id", "point_id", "point_order",
                 "scheduledstoppoint_id", "timingpoint_id",
                 "onward_timinglink_id", "is_waitpoint");
@@ -458,7 +458,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "timedemandtypes", rows,
-                "dataset", "timedemandtype_id", "version", "type", "entry_id",
+                "dataset_id", "timedemandtype_id", "version", "type", "entry_id",
                 "timinglink_id", "scheduledstoppoint_id", "timingpoint_id", "duration");
     }
 
@@ -476,7 +476,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "notices", rows,
-                "dataset", "notice_id", "version", "name", "text");
+                "dataset_id", "notice_id", "version", "name", "text");
     }
 
     private Table noticeAssignments(ServiceFrame frame, String dataset) {
@@ -494,7 +494,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "noticeassignments", rows,
-                "dataset", "assignment_id", "version", "notice_id", "object_id", "view");
+                "dataset_id", "assignment_id", "version", "notice_id", "object_id", "view_index");
     }
 
     private Table lines(ServiceFrame frame, String dataset) {
@@ -535,7 +535,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new Table(dataset, "lines", lines,
-                "dataset", "line_id", "version", "lineplanningnumber", "branding", "name",
+                "dataset_id", "line_id", "version", "lineplanningnumber", "branding", "name",
                 "shortname", "description", "mode", "url", "publiccode",
                 "authority", "operator", "label", "monitored", "color",
                 "textcolor");

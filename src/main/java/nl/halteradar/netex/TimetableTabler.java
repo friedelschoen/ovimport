@@ -25,7 +25,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                     });
 
         return new Table(dataset, "availabilityconditions", rows,
-                "dataset", "availabilitycondition_id", "version", "name", "from_date",
+                "dataset_id", "availabilitycondition_id", "version", "name", "from_date",
                 "to_date", "validdays", "availability");
     }
 
@@ -102,7 +102,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
         }
 
         return new Table(dataset, "vehiclejourneys", rows,
-                "dataset", "vehiclejourney_id", "version", "type", "derived_from", "condition",
+                "dataset_id", "vehiclejourney_id", "version", "type", "derived_from", "condition",
                 "journeynumber", "departuretime", "departuredayoffset",
                 "journeypattern_id", "timedemandtype_id", "vehicletype_id",
                 "operator_id", "dynamic");
@@ -137,7 +137,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
         }
 
         return new Table(dataset, "vehiclejourneyconditions", rows,
-                "dataset", "vehiclejourney_id", "version", "validitycondition_id");
+                "dataset_id", "vehiclejourney_id", "version", "validitycondition_id");
     }
 
     private Table journeyInterchanges(TimetableFrame frame, String dataset) {
@@ -156,7 +156,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                     });
 
         return new Table(dataset, "journeyinterchanges", rows,
-                "dataset", "journeyinterchange_id", "version", "from_point", "to_point",
+                "dataset_id", "journeyinterchange_id", "version", "from_point", "to_point",
                 "from_journey", "to_journey");
     }
 
