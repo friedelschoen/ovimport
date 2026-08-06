@@ -1,8 +1,8 @@
-netex2csv
+ovimport
 ============================================================
 
-`netex2csv` converts Dutch NeTEx publications into a flat CSV representation suitable for bulk loading into PostgreSQL
-or other relational databases.
+`ovimport` converts Dutch NeTEx publications into a flat CSV representation suitable for bulk loading into PostgreSQL or
+other relational databases.
 
 The converter preserves the original NeTEx object model where practical and writes one CSV file per table. The resulting
 archive is intended as an intermediate format for further processing, not as a public data model.
@@ -18,13 +18,13 @@ Usage
 ------------------------------------------------------------
 
 ```sh
-java -jar target/netex2csv.jar [options] INPUT...
+java -jar target/ovimport.jar [options] INPUT...
 ```
 
 Example:
 
 ```sh
-java -jar target/netex2csv.jar \
+java -jar target/ovimport.jar \
     --output netex.zip \
     NeTEx_QBUZZ_*.xml.gz
 ```

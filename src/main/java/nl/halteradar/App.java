@@ -42,9 +42,9 @@ public class App {
     }
 
     public static void help(int exitcode) {
-        System.out.println("netex2csv - NeTEx to CSV\n"
+        System.out.println("ovimport - NeTEx to CSV\n"
                 + "\n"
-                + "Usage: netex2csv [options] [--] INPUTFILES\n"
+                + "Usage: ovimport [options] [--] INPUTFILES\n"
                 + "\n"
                 + "Options:\n"
                 + " -o, --output FILE .. Writes the zip to FILE. [default: './netex.zip']\n"

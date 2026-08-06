@@ -1,10 +1,10 @@
-netex2csv is licensed under the zlib License.
+ovimport is licensed under the zlib License.
 
 This license applies to the software authored for this project.
 Third-party materials are licensed separately; see NOTICE.
 
-netex2csv
-=========
+ovimport
+========
 
 Copyright (c) 2026 Friedel Schön <derfriedmundschoen@gmail.com>
 
@@ -28,7 +28,7 @@ Third-party material
 ====================
 
 The files under src/resources/xsd are not licensed under the zlib
-License applicable to the netex2csv source code.
+License applicable to the ovimport source code.
 
 These schema files are owned by Platform BISON under
 Samenwerkingsverband DOVA and are distributed under:
