@@ -1,20 +1,20 @@
 package nl.halteradar.netex;
 
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import nl.bisonnl.netex.TimetableFrame;
 import nl.halteradar.util.CommonTabler;
-import nl.halteradar.Table;
+import nl.halteradar.table.MemoryTable;
+import nl.halteradar.table.Table;
 
 class TimetableTabler extends CommonTabler<TimetableFrame> {
-    private Table availabilityConditions(TimetableFrame frame, String dataset) {
+    private Table availabilityConditions(TimetableFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getContentValidityConditions() != null)
             rows = frame.getContentValidityConditions().getAvailabilityCondition().parallelStream()
                     .map(cond -> new String[] {
-                            dataset,
+                            timestamp.toString(),
                             cond.getId(),
                             str(cond.getVersion(), () -> "any"),
                             text(cond.getName()),
@@ -24,12 +24,12 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                             binBool(cond.isIsAvailable())
                     });
 
-        return new Table(dataset, "availabilityconditions", rows,
-                "dataset_id", "availabilitycondition_id", "version", "name", "from_date",
+        return new MemoryTable("availabilityconditions", rows,
+                "#frame_timestamp", "$availabilitycondition_id", "#version", "name", "from_date",
                 "to_date", "validdays", "availability");
     }
 
-    private Table vehicleJourneys(TimetableFrame frame, String dataset) {
+    private Table vehicleJourneys(TimetableFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getVehicleJourneys() != null) {
@@ -49,7 +49,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                             }
                             // derivedFromVersionRef, keyList, dayTypes (-> validityConditions)
                             return new String[] {
-                                    dataset,
+                                    timestamp.toString(),
                                     journey.getId(),
                                     str(journey.getVersion(), () -> "any"),
                                     "service",
@@ -79,7 +79,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                         }
                     }
                     return new String[] {
-                            dataset,
+                            timestamp.toString(),
                             journey.getId(),
                             str(journey.getVersion(), () -> "any"),
                             "deadrun",
@@ -101,14 +101,14 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
             rows = Stream.concat(serviceJourneys, deadrunJourneys);
         }
 
-        return new Table(dataset, "vehiclejourneys", rows,
-                "dataset_id", "vehiclejourney_id", "version", "type", "derived_from", "condition",
+        return new MemoryTable("vehiclejourneys", rows,
+                "#frame_timestamp", "$vehiclejourney_id", "#version", "type", "derived_from", "condition",
                 "journeynumber", "departuretime", "departuredayoffset",
                 "journeypattern_id", "timedemandtype_id", "vehicletype_id",
                 "operator_id", "dynamic");
     }
 
-    private Table vehicleJourneyConditions(TimetableFrame frame, String dataset) {
+    private Table vehicleJourneyConditions(TimetableFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getVehicleJourneys() != null) {
@@ -119,7 +119,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                 serviceJourneys = frame.getVehicleJourneys().getServiceJourney().parallelStream()
                         .flatMap(journey -> journey.getValidityConditions() != null
                                 ? journey.getValidityConditions().getAvailabilityConditionRef().stream().map(
-                                        cond -> new String[] { dataset, journey.getId(),
+                                        cond -> new String[] { timestamp.toString(), journey.getId(),
                                                 str(journey.getVersion(), () -> "any"),
                                                 refString(cond) })
                                 : Stream.empty());
@@ -128,7 +128,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                 deadrunJourneys = frame.getVehicleJourneys().getDeadRun().parallelStream()
                         .flatMap(journey -> journey.getValidityConditions() != null
                                 ? journey.getValidityConditions().getAvailabilityConditionRef().stream().map(
-                                        cond -> new String[] { dataset, journey.getId(),
+                                        cond -> new String[] { timestamp.toString(), journey.getId(),
                                                 str(journey.getVersion(), () -> "any"),
                                                 refString(cond) })
                                 : Stream.empty());
@@ -136,17 +136,17 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
             rows = Stream.concat(serviceJourneys, deadrunJourneys);
         }
 
-        return new Table(dataset, "vehiclejourneyconditions", rows,
-                "dataset_id", "vehiclejourney_id", "version", "validitycondition_id");
+        return new MemoryTable("vehiclejourneyconditions", rows,
+                "#frame_timestamp", "$vehiclejourney_id", "#version", "$validitycondition_id");
     }
 
-    private Table journeyInterchanges(TimetableFrame frame, String dataset) {
+    private Table journeyInterchanges(TimetableFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getJourneyInterchanges() != null)
             rows = frame.getJourneyInterchanges().getServiceJourneyInterchange().parallelStream()
                     .map(change -> new String[] {
-                            dataset,
+                            timestamp.toString(),
                             change.getId(),
                             str(change.getVersion(), () -> "any"),
                             refString(change.getFromPointRef()),
@@ -155,17 +155,17 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                             refString(change.getToJourneyRef()),
                     });
 
-        return new Table(dataset, "journeyinterchanges", rows,
-                "dataset_id", "journeyinterchange_id", "version", "from_point", "to_point",
+        return new MemoryTable("journeyinterchanges", rows,
+                "#frame_timestamp", "$journeyinterchange_id", "#version", "from_point", "to_point",
                 "from_journey", "to_journey");
     }
 
     @Override
-    public Stream<Table> apply(TimetableFrame frame, String dataset) {
+    public Stream<Table> apply(TimetableFrame frame, Long timestamp) {
         return Stream.of(
-                availabilityConditions(frame, dataset),
-                vehicleJourneys(frame, dataset),
-                vehicleJourneyConditions(frame, dataset));
+                availabilityConditions(frame, timestamp),
+                vehicleJourneys(frame, timestamp),
+                vehicleJourneyConditions(frame, timestamp));
         // this::journeyInterchanges);
     }
 }

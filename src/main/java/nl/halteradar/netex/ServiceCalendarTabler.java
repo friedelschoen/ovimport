@@ -5,10 +5,11 @@ import java.util.stream.Stream;
 
 import nl.bisonnl.netex.ServiceCalendarFrame;
 import nl.halteradar.util.CommonTabler;
-import nl.halteradar.Table;
+import nl.halteradar.table.MemoryTable;
+import nl.halteradar.table.Table;
 
 final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
-    Table dayTypes(ServiceCalendarFrame frame, String dataset) {
+    Table dayTypes(ServiceCalendarFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getDayTypes() != null) {
@@ -44,7 +45,7 @@ final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
                 }
 
                 return new String[] {
-                        dataset,
+                        timestamp.toString(),
                         dayType.getId(),
                         str(dayType.getVersion(), () -> "any"),
                         text(dayType.getName()),
@@ -61,18 +62,18 @@ final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
             });
         }
 
-        return new Table(dataset, "daytypes", rows,
-                "dataset_id", "daytype_id", "version", "name", "shortname", "daysofweek",
+        return new MemoryTable("daytypes", rows,
+                "#frame_timestamp", "$daytype_id", "#version", "name", "shortname", "daysofweek",
                 "weeksofmonth", "dayofyear", "holidaytypes", "seasons",
                 "tides", "dayevent", "crowding");
     }
 
-    Table dayTypeAssignmens(ServiceCalendarFrame frame, String dataset) {
+    Table dayTypeAssignmens(ServiceCalendarFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getDayTypeAssignments() != null) {
             rows = frame.getDayTypeAssignments().getDayTypeAssignment().parallelStream().map(assign -> new String[] {
-                    dataset,
+                    timestamp.toString(),
                     assign.getId(),
                     str(assign.getVersion(), () -> "any"),
                     assign.getDate().toString(),
@@ -80,15 +81,16 @@ final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
             });
         }
 
-        return new Table(dataset, "daytypeassignments", rows,
-                "dataset_id", "daytypeassignment_id", "version", "date", "daytype_id");
+        return new MemoryTable("daytypeassignments", rows,
+                "#frame_timestamp", "$daytypeassignment_id", "#version", "date", "daytype_id");
     }
 
-    Table timebands(ServiceCalendarFrame frame, String dataset) {
+    Table timebands(ServiceCalendarFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getTimebands() != null) {
             rows = frame.getTimebands().getTimeband().parallelStream().map(timeband -> new String[] {
+                    timestamp.toString(),
                     timeband.getId(),
                     str(timeband.getVersion(), () -> "any"),
                     timeband.getStartTime().toString(),
@@ -96,15 +98,15 @@ final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
             });
         }
 
-        return new Table(dataset, "timebands", rows,
-                "dataset_id", "timeband_id", "version", "starttime", "endtime");
+        return new MemoryTable("timebands", rows,
+                "#frame_timestamp", "$timeband_id", "#version", "starttime", "endtime");
     }
 
     @Override
-    public Stream<Table> apply(ServiceCalendarFrame frame, String dataset) {
+    public Stream<Table> apply(ServiceCalendarFrame frame, Long timestamp) {
         return Stream.of(
-                dayTypes(frame, dataset),
-                dayTypeAssignmens(frame, dataset));
+                dayTypes(frame, timestamp),
+                dayTypeAssignmens(frame, timestamp));
         // this::timebands);
     }
 }

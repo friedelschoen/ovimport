@@ -1,46 +1,12 @@
 package nl.halteradar;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Stream;
-import java.util.zip.GZIPInputStream;
 
-import javax.xml.transform.stream.StreamSource;
-
-import nl.halteradar.netex.NeTExTabler;
-import nl.halteradar.util.FromFile;
-import nl.halteradar.writer.CSVFileWriter;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBElement;
-import nl.bisonnl.netex.PublicationDelivery;
+import com.opencsv.CSVWriter;
 
 public class App {
-    private static void createNetex(Path output, Path workdir, String[] files) throws Exception {
-        var ctx = JAXBContext.newInstance(PublicationDelivery.class);
-
-        Arrays.stream(files).parallel()
-                .map(f -> {
-                    try (var instream = new FileInputStream(f); var zstream = new GZIPInputStream(instream)) {
-                        return new FromFile<>(f, ctx.createUnmarshaller().unmarshal(new StreamSource(zstream),
-                                PublicationDelivery.class));
-                    } catch (Exception e) {
-                        throw new IllegalStateException("failed to parse " + f, e);
-                    }
-                })
-                .filter(Objects::nonNull)
-                .map(FromFile.mapper(JAXBElement::getValue))
-                .flatMap(FromFile.mapperToStream(pub -> pub.getDataObjects() == null
-                        ? Stream.empty()
-                        : pub.getDataObjects().getCompositeFrame().parallelStream()))
-                .flatMap(new NeTExTabler())
-                .collect(new TableMerger(output, workdir, CSVFileWriter::new));
-
-    }
-
     public static void help(int exitcode) {
         System.out.println("ovimport - NeTEx to CSV\n"
                 + "\n"
@@ -104,6 +70,6 @@ public class App {
             return;
         }
 
-        createNetex(output, workdir, files);
+        new ImportPipeline().writeTables(output, workdir, files);
     }
 }

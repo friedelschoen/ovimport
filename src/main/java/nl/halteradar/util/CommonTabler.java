@@ -14,9 +14,9 @@ import nl.bisonnl.netex.PrivateCodes;
 import nl.bisonnl.netex.VersionOfObjectRefStructure;
 import nl.bisonnl.netex.VersionOfObjectRefStructureWithClass;
 import nl.bisonnl.netex.VersionOfObjectRefStructureWithOptionalClass;
-import nl.halteradar.Table;
+import nl.halteradar.table.Table;
 
-public abstract class CommonTabler<T> implements BiFunction<T, String, Stream<Table>> {
+public abstract class CommonTabler<T> implements BiFunction<T, Long, Stream<Table>> {
     static protected final String Delimiter = ";";
 
     protected static String binBool(Boolean b) {

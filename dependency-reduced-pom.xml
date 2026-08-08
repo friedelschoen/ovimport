@@ -41,7 +41,7 @@
                 <include>netex-nl-geen-constraints.xsd</include>
               </schemaIncludes>
               <generatePackage>nl.bisonnl.netex</generatePackage>
-              <generateDirectory>${project.build.directory}/generated-sources/xjc</generateDirectory>
+              <generateDirectory>${project.build.directory}/generated-sources/xjc/netex</generateDirectory>
               <extension>true</extension>
               <strict>false</strict>
             </configuration>
@@ -57,7 +57,7 @@
                 <include>chb.842-msg.xsd</include>
               </schemaIncludes>
               <generatePackage>nl.bisonnl.chb</generatePackage>
-              <generateDirectory>${project.build.directory}/generated-sources/xjc</generateDirectory>
+              <generateDirectory>${project.build.directory}/generated-sources/xjc/chb</generateDirectory>
               <extension>true</extension>
               <strict>false</strict>
             </configuration>

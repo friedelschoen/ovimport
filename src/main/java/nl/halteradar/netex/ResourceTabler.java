@@ -9,17 +9,18 @@ import nl.bisonnl.netex.PassengerCapacity;
 import nl.bisonnl.netex.ResourceFrame;
 import nl.bisonnl.netex.VersionOfObjectRefStructure;
 import nl.halteradar.util.CommonTabler;
-import nl.halteradar.Table;
+import nl.halteradar.table.MemoryTable;
+import nl.halteradar.table.Table;
 
 final class ResourceTabler extends CommonTabler<ResourceFrame> {
-    private Table branding(ResourceFrame frame, String dataset) {
+    private Table branding(ResourceFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getTypesOfValue() != null) {
             Stream<String[]> brandings = frame.getTypesOfValue().getBranding().parallelStream().map(branding -> {
                 var colors = presentationColor(branding.getPresentation());
                 return new String[] {
-                        dataset,
+                        timestamp.toString(),
                         branding.getId(),
                         str(branding.getVersion(), () -> "any"),
                         "branding",
@@ -35,7 +36,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
             Stream<String[]> labels = frame.getTypesOfValue().getTypeOfProductCategory().parallelStream().map(label -> {
                 var colors = presentationColor(label.getPresentation());
                 return new String[] {
-                        dataset,
+                        timestamp.toString(),
                         label.getId(),
                         str(label.getVersion(), () -> "any"),
                         "label",
@@ -51,18 +52,18 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
             rows = Stream.concat(brandings, labels);
         }
 
-        return new Table(dataset, "serviceclasses", rows,
-                "dataset_id", "serviceclass_id", "version", "type", "name", "description", "image", "url", "color",
-                "textcolor");
+        return new MemoryTable("serviceclasses", rows,
+                "#frame_timestamp", "$serviceclass_id", "#version", "type", "name", "description", "image", "url",
+                "color", "textcolor");
     }
 
-    private Table organisations(ResourceFrame frame, String dataset) {
+    private Table organisations(ResourceFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getOrganisations() != null) {
             rows = frame.getOrganisations().getAuthorityOrOperator().parallelStream().map(value -> switch (value) {
                 case Authority au -> new String[] {
-                        dataset,
+                        timestamp.toString(),
                         au.getId(),
                         str(au.getVersion(), () -> "any"),
                         "authority",
@@ -71,7 +72,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
                         text(au.getDescription()),
                 };
                 case Operator op -> new String[] {
-                        dataset,
+                        timestamp.toString(),
                         op.getId(),
                         str(op.getVersion(), () -> "any"),
                         "operator",
@@ -83,11 +84,11 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
             });
         }
 
-        return new Table(dataset, "organisations", rows,
-                "dataset_id", "organisation_id", "version", "type", "name", "shortname", "description");
+        return new MemoryTable("organisations", rows,
+                "#frame_timestamp", "$organisation_id", "#version", "type", "name", "shortname", "description");
     }
 
-    private Table passengerCapacities(ResourceFrame frame, String dataset) {
+    private Table passengerCapacities(ResourceFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
         if (frame.getVehicleTypes() != null) {
             rows = frame.getVehicleTypes().getVehicleType().parallelStream()
@@ -98,7 +99,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
                     .filter(Objects::nonNull)
                     .filter(cap -> cap.getId() != null)
                     .map(c -> new String[] {
-                            dataset,
+                            timestamp.toString(),
                             c.getId(),
                             str(c.getVersion(), () -> "any"),
                             str(c.getFareClass()),
@@ -111,18 +112,18 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
                     });
         }
 
-        return new Table(dataset, "passengercapacities", rows,
-                "dataset_id", "capacity_id", "version", "fareclass", "total", "seating",
+        return new MemoryTable("passengercapacities", rows,
+                "#frame_timestamp", "$capacity_id", "#version", "fareclass", "total", "seating",
                 "standing", "specialplace", "pushchair", "wheelchair");
     }
 
-    private Table vehicleTypes(ResourceFrame frame, String dataset) {
+    private Table vehicleTypes(ResourceFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getVehicleTypes() != null) {
             rows = frame.getVehicleTypes().getVehicleType().parallelStream().map(vt -> {
                 return new String[] {
-                        dataset,
+                        timestamp.toString(),
                         vt.getId(),
                         str(vt.getVersion(), () -> "any"),
                         privateCode(vt.getPrivateCodes(), "VoertuigTypeCode"),
@@ -152,8 +153,8 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
             });
         }
 
-        return new Table(dataset, "vehicletypes", rows,
-                "dataset_id", "vehicletype_id", "version", "vehicletypecode", "branding", "name",
+        return new MemoryTable("vehicletypes", rows,
+                "#frame_timestamp", "$vehicletype_id", "#version", "vehicletypecode", "branding", "name",
                 "shortname", "description", "euroclass", "reversingdirection",
                 "selfpropelled", "propulsiontype", "fueltype", "maximumrange",
                 "transportmode", "lowfloor", "liftorramp", "hoist",
@@ -161,7 +162,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
                 "height", "weight", "firstaxleheight");
     }
 
-    private Table vehicleTypeCapacities(ResourceFrame frame, String dataset) {
+    private Table vehicleTypeCapacities(ResourceFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getVehicleTypes() != null) {
@@ -169,9 +170,9 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
                     ? vt.getCapacities().getPassengerCapacityRefOrPassengerCapacity().stream()
                             .map(cap -> switch (cap) {
                                 case VersionOfObjectRefStructure ref ->
-                                    new String[] { dataset, vt.getId(), refString(ref) };
+                                    new String[] { timestamp.toString(), vt.getId(), refString(ref) };
                                 case PassengerCapacity pc ->
-                                    new String[] { dataset, vt.getId(), pc.getId() };
+                                    new String[] { timestamp.toString(), vt.getId(), pc.getId() };
                                 default -> null;
                             })
                             .filter(Objects::nonNull)
@@ -179,16 +180,16 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
                     : Stream.empty());
         }
 
-        return new Table(dataset, "vehicletypecapacities", rows,
-                "dataset_id", "vehicletype_id", "capacity_id");
+        return new MemoryTable("vehicletypecapacities", rows,
+                "#frame_timestamp", "$vehicletype_id", "$capacity_id");
     }
 
-    private Table vehicles(ResourceFrame frame, String dataset) {
+    private Table vehicles(ResourceFrame frame, Long timestamp) {
         Stream<String[]> rows = Stream.empty();
 
         if (frame.getVehicles() != null) {
             rows = frame.getVehicles().getVehicle().parallelStream().map(v -> new String[] {
-                    dataset,
+                    timestamp.toString(),
                     v.getId(),
                     str(v.getVersion(), () -> "any"),
                     str(v.getValidBetween().getFromDate()),
@@ -200,19 +201,19 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
             });
         }
 
-        return new Table(dataset, "vehicles", rows,
-                "dataset_id", "vehicle_id", "version", "from_date", "to_date", "registration",
+        return new MemoryTable("vehicles", rows,
+                "#frame_timestamp", "$vehicle_id", "#version", "from_date", "to_date", "registration",
                 "operationalnumber", "operator_id", "vehicletype_id");
     }
 
     @Override
-    public Stream<Table> apply(ResourceFrame frame, String dataset) {
+    public Stream<Table> apply(ResourceFrame frame, Long timestamp) {
         return Stream.of(
-                branding(frame, dataset),
-                organisations(frame, dataset),
-                vehicleTypes(frame, dataset),
-                vehicleTypeCapacities(frame, dataset),
-                passengerCapacities(frame, dataset),
-                vehicles(frame, dataset));
+                branding(frame, timestamp),
+                organisations(frame, timestamp),
+                vehicleTypes(frame, timestamp),
+                vehicleTypeCapacities(frame, timestamp),
+                passengerCapacities(frame, timestamp),
+                vehicles(frame, timestamp));
     }
 }
