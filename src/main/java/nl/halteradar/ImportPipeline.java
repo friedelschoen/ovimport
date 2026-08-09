@@ -22,6 +22,7 @@ import jakarta.xml.bind.Unmarshaller;
 
 import nl.bisonnl.chb.Export;
 import nl.bisonnl.netex.PublicationDelivery;
+import nl.halteradar.chb.CHBTabler;
 import nl.halteradar.netex.NeTExTabler;
 import nl.halteradar.table.CSVTable;
 import nl.halteradar.table.CSVTableSink;
@@ -62,9 +63,7 @@ final class ImportPipeline {
 
                 switch (root.getLocalPart()) {
                     case "PublicationDelivery": {
-                        var element = unmarshaller.unmarshal(
-                                reader,
-                                PublicationDelivery.class);
+                        var element = unmarshaller.unmarshal(reader, PublicationDelivery.class);
 
                         var publication = element.getValue();
 
@@ -85,14 +84,7 @@ final class ImportPipeline {
 
                         var export = element.getValue();
 
-                        /*
-                         * Enable when CHBTabler is ready:
-                         *
-                         * return Stream.of(export)
-                         * .flatMap(new CHBTabler());
-                         */
-                        throw new UnsupportedOperationException(
-                                "CHB parsing not implemented yet");
+                        return new CHBTabler().apply(export);
                     }
                     default:
                         throw new IllegalArgumentException(
@@ -142,9 +134,7 @@ final class ImportPipeline {
                                          * so the intermediate file contains
                                          * rows only.
                                          */
-                                        return new CSVTableSink(
-                                                path,
-                                                true);
+                                        return new CSVTableSink(table, path, true);
                                     } catch (IOException e) {
                                         throw new UncheckedIOException(e);
                                     }

@@ -39,14 +39,6 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
             if (frame.getVehicleJourneys().getServiceJourney() != null)
                 serviceJourneys = frame.getVehicleJourneys().getServiceJourney().parallelStream()
                         .map(journey -> {
-                            var condition = new StringBuilder();
-                            if (journey.getValidityConditions() != null) {
-                                for (var ref : journey.getValidityConditions().getAvailabilityConditionRef()) {
-                                    if (condition.length() > 0)
-                                        condition.append(Delimiter);
-                                    condition.append(refString(ref));
-                                }
-                            }
                             // derivedFromVersionRef, keyList, dayTypes (-> validityConditions)
                             return new String[] {
                                     timestamp.toString(),
@@ -54,7 +46,6 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                                     str(journey.getVersion(), () -> "any"),
                                     "service",
                                     journey.getDerivedFromObjectRef(),
-                                    condition.toString(),
                                     privateCode(journey.getPrivateCodes(), "JourneyNumber"),
                                     str(journey.getDepartureTime()),
                                     journey.getDepartureDayOffset() != null
@@ -70,21 +61,12 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
 
             if (frame.getVehicleJourneys().getDeadRun() != null)
                 deadrunJourneys = frame.getVehicleJourneys().getDeadRun().parallelStream().map(journey -> {
-                    var condition = new StringBuilder();
-                    if (journey.getValidityConditions() != null) {
-                        for (var ref : journey.getValidityConditions().getAvailabilityConditionRef()) {
-                            if (condition.length() > 0)
-                                condition.append(Delimiter);
-                            condition.append(refString(ref));
-                        }
-                    }
                     return new String[] {
                             timestamp.toString(),
                             journey.getId(),
                             str(journey.getVersion(), () -> "any"),
                             "deadrun",
                             null,
-                            condition.toString(),
                             privateCode(journey.getPrivateCodes(), "JourneyNumber"),
                             journey.getDepartureTime().toString(),
                             journey.getDepartureDayOffset() != null
@@ -102,7 +84,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
         }
 
         return new MemoryTable("vehiclejourneys", rows,
-                "#frame_timestamp", "$vehiclejourney_id", "#version", "type", "derived_from", "condition",
+                "#frame_timestamp", "$vehiclejourney_id", "#version", "type", "derived_from",
                 "journeynumber", "departuretime", "departuredayoffset",
                 "journeypattern_id", "timedemandtype_id", "vehicletype_id",
                 "operator_id", "dynamic");
@@ -137,7 +119,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
         }
 
         return new MemoryTable("vehiclejourneyconditions", rows,
-                "#frame_timestamp", "$vehiclejourney_id", "#version", "$validitycondition_id");
+                "#frame_timestamp", "$vehiclejourney_id", "#version", "$availabilitycondition_id");
     }
 
     private Table journeyInterchanges(TimetableFrame frame, Long timestamp) {

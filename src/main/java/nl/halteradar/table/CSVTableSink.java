@@ -12,39 +12,37 @@ import java.util.stream.Stream;
 import com.opencsv.CSVWriter;
 
 public class CSVTableSink extends CSVWriter implements TableSink<CSVTableSink, CSVTableSink> {
-
     private final Path path;
+    private final Table table;
     private final Writer writer;
 
     private boolean headerWritten;
-    private Table table;
+    private int rowCount = 0;
 
-    public CSVTableSink(
-            Path path,
-            Writer writer,
-            boolean skipHeader) {
+    public CSVTableSink(Table table, Path path, Writer writer, boolean skipHeader) {
 
         super(writer);
 
+        this.table = table;
         this.path = path;
         this.writer = writer;
         this.headerWritten = skipHeader;
     }
 
-    public CSVTableSink(Path path, Writer writer) {
-        this(path, writer, false);
+    public CSVTableSink(Table table, Path path, Writer writer) {
+        this(table, path, writer, false);
     }
 
-    public CSVTableSink(Path path, boolean skipHeader)
+    public CSVTableSink(Table table, Path path, boolean skipHeader)
             throws IOException {
 
-        this(path, new FileWriter(path.toFile(), false), skipHeader);
+        this(table, path, new FileWriter(path.toFile(), false), skipHeader);
     }
 
-    public CSVTableSink(Path path)
+    public CSVTableSink(Table table, Path path)
             throws IOException {
 
-        this(path, false);
+        this(table, path, false);
     }
 
     public Table getTable() {
@@ -61,19 +59,18 @@ public class CSVTableSink extends CSVWriter implements TableSink<CSVTableSink, C
 
         try (rows) {
             rows.sequential().forEach(row -> {
-                if (table == null) {
-                    table = row.table();
-                } else if (!row.table().equals(table)) {
+                if (!row.table().equals(table)) {
                     throw new ApplesOrangesException(
                             "inconsistent tables");
                 }
 
                 if (!headerWritten) {
-                    writeNext(row.table().getHeader());
+                    writeNext(row.table().getHeader(), false);
                     headerWritten = true;
                 }
 
-                writeNext(row.row());
+                rowCount++;
+                writeNext(row.row(), false);
             });
         }
     }
@@ -102,6 +99,8 @@ public class CSVTableSink extends CSVWriter implements TableSink<CSVTableSink, C
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+
+        System.out.printf("%s: %d rows written\n", table.getName(), rowCount);
 
         return this;
     }

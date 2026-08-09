@@ -1,10 +1,7 @@
 package nl.halteradar;
 
-import java.io.OutputStreamWriter;
 import java.nio.file.Path;
 import java.util.Arrays;
-
-import com.opencsv.CSVWriter;
 
 public class App {
     public static void help(int exitcode) {

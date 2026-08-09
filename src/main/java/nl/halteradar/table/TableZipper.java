@@ -53,10 +53,10 @@ public final class TableZipper {
         @SuppressWarnings("resource")
         CSVWriter writer = new CSVWriter(new java.io.OutputStreamWriter(zip));
 
-        writer.writeNext(table.getHeader());
+        writer.writeNext(table.getHeader(), false);
 
         try (var rows = table.rows()) {
-            rows.sequential().forEach(row -> writer.writeNext(row.row()));
+            rows.sequential().forEach(row -> writer.writeNext(row.row(), false));
         }
 
         writer.flush();
