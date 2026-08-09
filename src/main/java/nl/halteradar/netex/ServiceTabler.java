@@ -28,7 +28,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("routepoints", routePoints,
-                "#frame_timestamp", "$routepoint_id", "#version", "point");
+                "%valid_from", "$routepoint_id", "#version", "point");
     }
 
     private Table routeLinks(ServiceFrame frame, Long timestamp) {
@@ -49,7 +49,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("routelinks", rows,
-                "#frame_timestamp", "$routelink_id", "#version", "from_routepoint_id", "to_routepoint_id",
+                "%valid_from", "$routelink_id", "#version", "from_routepoint_id", "to_routepoint_id",
                 "distance", "linestring", "operational_context_id",
                 "responsibilityset_id");
     }
@@ -82,7 +82,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("routes", rows,
-                "#frame_timestamp", "$route_id", "#version", "line_id", "name", "direction", "$point_id", "point_order",
+                "%valid_from", "$route_id", "#version", "line_id", "name", "direction", "$point_id", "point_order",
                 "routepoint_id", "onward_routelink_id");
     }
 
@@ -118,7 +118,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("destinationdisplays", rows,
-                "#frame_timestamp", "$destinationdisplay_id", "#version", "destinationcode", "name", "sidetext",
+                "%valid_from", "$destinationdisplay_id", "#version", "destinationcode", "name", "sidetext",
                 "fronttext", "color", "textcolor", "vias");
     }
 
@@ -141,7 +141,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("destinationdisplayvariants", rows,
-                "#frame_timestamp", "$destinationdisplay_id", "#version", "$mediatype", "$length", "name");
+                "%valid_from", "$destinationdisplay_id", "#version", "$mediatype", "$length", "name");
     }
 
     private Table scheduledStopPoints(ServiceFrame frame, Long timestamp) {
@@ -178,7 +178,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("scheduledstoppoints", rows,
-                "#frame_timestamp", "$scheduledstoppoint_id", "#version", "userstopcode", "name", "point",
+                "%valid_from", "$scheduledstoppoint_id", "#version", "userstopcode", "name", "point",
                 "projected_routepoint_id", "stoparea_id", "alighting",
                 "boarding", "place");
     }
@@ -197,7 +197,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("scheduledstoppointtariffzones", rows,
-                "#frame_timestamp", "$scheduledstoppoint_id", "#version", "$tariffzone");
+                "%valid_from", "$scheduledstoppoint_id", "#version", "$tariffzone");
     }
 
     private Table stopAreas(ServiceFrame frame, Long timestamp) {
@@ -221,7 +221,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
             });
         }
 
-        return new MemoryTable("stopareas", rows, "#frame_timestamp", "$stoparea_id", "#version", "userstopareacode",
+        return new MemoryTable("stopareas", rows, "%valid_from", "$stoparea_id", "#version", "userstopareacode",
                 "name",
                 "publiccode", "place");
     }
@@ -244,7 +244,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("stopassignments", rows,
-                "#frame_timestamp", "$assignment_id", "#version", "scheduledstoppoint_id", "quay_id", "stopplace_id");
+                "%valid_from", "$assignment_id", "#version", "scheduledstoppoint_id", "quay_id", "stopplace_id");
     }
 
     private Table timingPoints(ServiceFrame frame, Long timestamp) {
@@ -268,7 +268,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("timingpoints", rows,
-                "#frame_timestamp", "$timingpoint_id", "#version", "name", "point", "projected_routepoint_id");
+                "%valid_from", "$timingpoint_id", "#version", "name", "point", "projected_routepoint_id");
     }
 
     private Table timingLinks(ServiceFrame frame, Long timestamp) {
@@ -287,7 +287,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("timinglinks", rows,
-                "#frame_timestamp", "$timinglink_id", "#version", "frompoint_id", "topoint_id",
+                "%valid_from", "$timinglink_id", "#version", "frompoint_id", "topoint_id",
                 "distance", "operational_context_id");
     }
 
@@ -394,7 +394,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
                     });
             rows = Stream.concat(serviceJourneys, deadRunJourneys);
         }
-        return new MemoryTable("journeypatterns", rows, "#frame_timestamp", "$journeypattern_id", "#version", "name",
+        return new MemoryTable("journeypatterns", rows, "%valid_from", "$journeypattern_id", "#version", "name",
                 "route_id", "direction", "destinationdisplay_id", "$point_id", "point_order", "scheduledstoppoint_id",
                 "timingpoint_id", "onward_timinglink_id", "is_waitpoint");
     }
@@ -458,7 +458,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
                     });
         }
 
-        return new MemoryTable("timedemandtypes", rows, "#frame_timestamp", "$timedemandtype_id", "#version", "type",
+        return new MemoryTable("timedemandtypes", rows, "%valid_from", "$timedemandtype_id", "#version", "type",
                 "entry_id", "timinglink_id", "scheduledstoppoint_id", "timingpoint_id", "duration");
     }
 
@@ -476,7 +476,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("notices", rows,
-                "#frame_timestamp", "$notice_id", "#version", "name", "text");
+                "%valid_from", "$notice_id", "#version", "name", "text");
     }
 
     private Table noticeAssignments(ServiceFrame frame, Long timestamp) {
@@ -494,7 +494,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("noticeassignments", rows,
-                "#frame_timestamp", "$assignment_id", "#version", "notice_id", "object_id", "view_index");
+                "%valid_from", "$assignment_id", "#version", "notice_id", "object_id", "view_index");
     }
 
     private Table lines(ServiceFrame frame, Long timestamp) {
@@ -535,7 +535,7 @@ class ServiceTabler extends CommonTabler<ServiceFrame> {
         }
 
         return new MemoryTable("lines", lines,
-                "#frame_timestamp", "$line_id", "#version", "lineplanningnumber", "branding", "name",
+                "%valid_from", "$line_id", "#version", "lineplanningnumber", "branding", "name",
                 "shortname", "description", "mode", "url", "publiccode",
                 "authority", "operator", "label", "monitored", "color",
                 "textcolor");

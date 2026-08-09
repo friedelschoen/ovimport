@@ -53,7 +53,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new MemoryTable("serviceclasses", rows,
-                "#frame_timestamp", "$serviceclass_id", "#version", "type", "name", "description", "image", "url",
+                "%valid_from", "$serviceclass_id", "#version", "type", "name", "description", "image", "url",
                 "color", "textcolor");
     }
 
@@ -85,7 +85,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new MemoryTable("organisations", rows,
-                "#frame_timestamp", "$organisation_id", "#version", "type", "name", "shortname", "description");
+                "%valid_from", "$organisation_id", "#version", "type", "name", "shortname", "description");
     }
 
     private Table passengerCapacities(ResourceFrame frame, Long timestamp) {
@@ -113,7 +113,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new MemoryTable("passengercapacities", rows,
-                "#frame_timestamp", "$capacity_id", "#version", "fareclass", "total", "seating",
+                "%valid_from", "$capacity_id", "#version", "fareclass", "total", "seating",
                 "standing", "specialplace", "pushchair", "wheelchair");
     }
 
@@ -154,7 +154,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new MemoryTable("vehicletypes", rows,
-                "#frame_timestamp", "$vehicletype_id", "#version", "vehicletypecode", "branding", "name",
+                "%valid_from", "$vehicletype_id", "#version", "vehicletypecode", "branding", "name",
                 "shortname", "description", "euroclass", "reversingdirection",
                 "selfpropelled", "propulsiontype", "fueltype", "maximumrange",
                 "transportmode", "lowfloor", "liftorramp", "hoist",
@@ -181,7 +181,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new MemoryTable("vehicletypecapacities", rows,
-                "#frame_timestamp", "$vehicletype_id", "$capacity_id");
+                "%valid_from", "$vehicletype_id", "$capacity_id");
     }
 
     private Table vehicles(ResourceFrame frame, Long timestamp) {
@@ -202,7 +202,7 @@ final class ResourceTabler extends CommonTabler<ResourceFrame> {
         }
 
         return new MemoryTable("vehicles", rows,
-                "#frame_timestamp", "$vehicle_id", "#version", "from_date", "to_date", "registration",
+                "%valid_from", "$vehicle_id", "#version", "from_date", "to_date", "registration",
                 "operationalnumber", "operator_id", "vehicletype_id");
     }
 

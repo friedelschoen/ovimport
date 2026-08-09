@@ -63,7 +63,7 @@ final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
         }
 
         return new MemoryTable("daytypes", rows,
-                "#frame_timestamp", "$daytype_id", "#version", "name", "shortname", "daysofweek",
+                "%valid_from", "$daytype_id", "#version", "name", "shortname", "daysofweek",
                 "weeksofmonth", "dayofyear", "holidaytypes", "seasons",
                 "tides", "dayevent", "crowding");
     }
@@ -82,7 +82,7 @@ final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
         }
 
         return new MemoryTable("daytypeassignments", rows,
-                "#frame_timestamp", "$daytypeassignment_id", "#version", "date", "daytype_id");
+                "%valid_from", "$daytypeassignment_id", "#version", "date", "daytype_id");
     }
 
     Table timebands(ServiceCalendarFrame frame, Long timestamp) {
@@ -99,7 +99,7 @@ final class ServiceCalendarTabler extends CommonTabler<ServiceCalendarFrame> {
         }
 
         return new MemoryTable("timebands", rows,
-                "#frame_timestamp", "$timeband_id", "#version", "starttime", "endtime");
+                "%valid_from", "$timeband_id", "#version", "starttime", "endtime");
     }
 
     @Override

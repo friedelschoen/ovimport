@@ -32,7 +32,7 @@ final class VehicleScheduleTabler extends CommonTabler<VehicleScheduleFrame> {
         }
 
         return new MemoryTable("blocks", rows,
-                "#frame_timestamp", "$block_id", "#version", "blockcode", "name", "description",
+                "%valid_from", "$block_id", "#version", "blockcode", "name", "description",
                 "preparationduration", "starttime", "starttimedayoffset",
                 "finishingduration", "endtime", "endtimedayoffset",
                 "startpoint_id", "endpoint_id");
@@ -51,7 +51,7 @@ final class VehicleScheduleTabler extends CommonTabler<VehicleScheduleFrame> {
         }
 
         return new MemoryTable("blockvaliditycondition", rows,
-                "#frame_timestamp", "$block_id", "#version", "$validitycondition_id");
+                "%valid_from", "$block_id", "#version", "$validitycondition_id");
     }
 
     Table blockDayTypes(VehicleScheduleFrame frame, Long timestamp) {
@@ -67,7 +67,7 @@ final class VehicleScheduleTabler extends CommonTabler<VehicleScheduleFrame> {
         }
 
         return new MemoryTable("blockdaytypes", rows,
-                "#frame_timestamp", "$block_id", "#version", "$daytypes");
+                "%valid_from", "$block_id", "#version", "$daytypes");
     }
 
     Table blockJourneys(VehicleScheduleFrame frame, Long timestamp) {
@@ -83,7 +83,7 @@ final class VehicleScheduleTabler extends CommonTabler<VehicleScheduleFrame> {
         }
 
         return new MemoryTable("blockjourneys", rows,
-                "#frame_timestamp", "$block_id", "#version", "$vehiclejourney_id");
+                "%valid_from", "$block_id", "#version", "$vehiclejourney_id");
     }
 
     @Override

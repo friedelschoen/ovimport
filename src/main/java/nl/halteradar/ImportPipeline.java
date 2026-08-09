@@ -6,6 +6,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
@@ -26,6 +27,7 @@ import nl.halteradar.chb.CHBTabler;
 import nl.halteradar.netex.NeTExTabler;
 import nl.halteradar.table.CSVTable;
 import nl.halteradar.table.CSVTableSink;
+import nl.halteradar.table.CSVFileTableSink;
 import nl.halteradar.table.Table;
 import nl.halteradar.table.TableSinkCollector;
 import nl.halteradar.table.TableDeduplicator;
@@ -119,7 +121,7 @@ final class ImportPipeline {
          * Parse XML files in parallel and merge each logical table
          * into one raw intermediate CSV.
          */
-        Stream<CSVTableSink> rawTables = Arrays.stream(files)
+        Collection<CSVFileTableSink> rawTables = Arrays.stream(files)
                 .parallel()
                 .flatMap(this::toTableStream)
                 .collect(
@@ -134,7 +136,7 @@ final class ImportPipeline {
                                          * so the intermediate file contains
                                          * rows only.
                                          */
-                                        return new CSVTableSink(table, path, true);
+                                        return new CSVFileTableSink(table, path, true);
                                     } catch (IOException e) {
                                         throw new UncheckedIOException(e);
                                     }
@@ -150,11 +152,10 @@ final class ImportPipeline {
          * -> deduplicate in memory
          * -> ZIP entry
          */
-        Stream<Table> tables = rawTables.map(sink -> new CSVTable(
-                sink.getPath(),
-                sink.getTable().getName(),
-                sink.getTable().getHeader())).map(TableDeduplicator::new);
+        Stream<Table> tables = rawTables.stream()
+                .map(sink -> new CSVTable(sink.getPath(), sink.getTable().getName(), sink.getTable().getHeader()))
+                .map(TableDeduplicator::new);
 
-        new TableZipper(output).write(tables);
+        new TableZipper(output, CSVTableSink::new).write(tables);
     }
 }

@@ -50,7 +50,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                         str(s.getInternalname()),
                         str(s.getIconuri())
                 }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "stopplace_code",
@@ -84,7 +84,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                                     str(d.getStopplaceindication())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "public_name",
@@ -117,7 +117,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                                     str(d.getLocation())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "level",
@@ -144,7 +144,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                                     str(d.getMunicipalitycode())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "municipality_code");
@@ -167,7 +167,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                                     str(d.getStopplaceownercode())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "owner_code");
@@ -190,7 +190,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                                     str(d.getStopplacestatus())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "status");
@@ -215,7 +215,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                                     str(d.getVisuallyImpairedAccess())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "visually_accessible",
@@ -244,7 +244,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                                     str(d.getWheelchairAccess())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "disabled_accessible",
@@ -277,7 +277,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                                     str(d.getRampwidth())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "height_with_environment",
@@ -316,7 +316,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                                     str(d.isOvccharging())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "timetable_information",
@@ -350,7 +350,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
                                     str(d.getRemarkstatus())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$stopplace_id",
                 "remarks",
@@ -403,7 +403,7 @@ class StopplaceTabler implements Function<List<Stopplace>, Stream<Table>> {
         return new MemoryTable(
                 "quays",
                 rows,
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "stopplace_id",

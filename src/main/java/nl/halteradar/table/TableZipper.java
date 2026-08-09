@@ -2,20 +2,28 @@ package nl.halteradar.table;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UncheckedIOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import com.opencsv.CSVWriter;
 
+import nl.halteradar.util.UnclosableOutputStream;
+
 public final class TableZipper {
     private final Path output;
+    private final BiFunction<Table, Writer, TableSink<?>> createSink;
 
-    public TableZipper(Path output) {
+    public TableZipper(Path output, BiFunction<Table, Writer, TableSink<?>> createSink) {
         this.output = output;
+        this.createSink = createSink;
     }
 
     public void write(Stream<? extends Table> tables) {
@@ -38,28 +46,18 @@ public final class TableZipper {
         }
     }
 
-    private void writeTable(
-            ZipOutputStream zip,
-            Table table) throws IOException {
-
+    private void writeTable(ZipOutputStream zip, Table table) throws IOException {
         System.err.printf("adding %s.csv to %s%n", table.getName(), output);
 
         zip.putNextEntry(new ZipEntry(table.getName() + ".csv"));
 
-        /*
-         * Closing CSVWriter would also close the ZipOutputStream,
-         * so deliberately do not use try-with-resources here.
-         */
-        @SuppressWarnings("resource")
-        CSVWriter writer = new CSVWriter(new java.io.OutputStreamWriter(zip));
+        OutputStream entryStream = new UnclosableOutputStream(zip, true);
 
-        writer.writeNext(table.getHeader(), false);
-
-        try (var rows = table.rows()) {
-            rows.sequential().forEach(row -> writer.writeNext(row.row(), false));
+        try (TableSink<?> sink = createSink.apply(table, new OutputStreamWriter(entryStream))) {
+            sink.accept(table.rows());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-        writer.flush();
 
         zip.closeEntry();
     }

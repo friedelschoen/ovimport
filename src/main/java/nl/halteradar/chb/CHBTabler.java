@@ -86,7 +86,7 @@ public final class CHBTabler implements Function<Export, Stream<Table>> {
                         str(p.getIconuri()),
                         str(p.getDescription())
                 }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$place_id",
                 "place_code",

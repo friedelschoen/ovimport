@@ -50,7 +50,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getQuaytype())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "quay_type");
@@ -71,7 +71,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                         str(q.getID()),
                                         str(d.getTransportmode())
                                 })),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "$transport_mode");
@@ -94,7 +94,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getQuaystatus())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "status");
@@ -123,7 +123,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getLocation())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "rd_x",
@@ -152,7 +152,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getCompassdirection())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "compass_direction");
@@ -177,7 +177,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getVisuallyImpairedAccess())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "visually_accessible",
@@ -200,7 +200,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                         str(d.getStepFreeAccess()),
                                         str(d.getWheelchairAccess())
                                 })),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "$transport_mode",
@@ -226,7 +226,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getMunicipalitycode())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "municipality_code");
@@ -248,7 +248,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getQuayownercode())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "owner_code");
@@ -272,7 +272,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getConcessionprovidercode())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "concession_provider_code");
@@ -297,7 +297,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getIconuri())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "quay_name",
@@ -344,7 +344,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getRampwidth())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "quay_shape_type",
@@ -405,7 +405,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.isOvccharging())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "stop_sign",
@@ -449,7 +449,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.isLiftedbicyclepath())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "road_code",
@@ -475,7 +475,7 @@ class QuayTabler implements Function<List<Quay>, Stream<Table>> {
                                     str(d.getRemarkstatus())
                             };
                         }),
-                "#validfrom",
+                "%valid_from",
                 "#mutationdate",
                 "$quay_id",
                 "remarks",

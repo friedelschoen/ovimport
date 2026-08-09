@@ -24,14 +24,14 @@ public final class TableDeduplicator implements Table {
     public String[] filterHeader() {
         int count = 0;
         for (String h : header) {
-            if (!h.startsWith("#"))
+            if (!h.startsWith("#") && !h.startsWith("%"))
                 count++;
         }
 
         String[] res = new String[count];
         count = 0;
         for (String h : header) {
-            if (!h.startsWith("#"))
+            if (!h.startsWith("#") && !h.startsWith("%"))
                 res[count++] = h.replaceFirst("^\\$", "");
         }
         return res;
@@ -40,14 +40,14 @@ public final class TableDeduplicator implements Table {
     public String[] filterRow(String[] row) {
         int count = 0;
         for (String h : header) {
-            if (!h.startsWith("#"))
+            if (!h.startsWith("#") && !h.startsWith("%"))
                 count++;
         }
 
         String[] res = new String[count];
         count = 0;
         for (int i = 0; i < header.length; i++) {
-            if (!header[i].startsWith("#"))
+            if (!header[i].startsWith("#") && !header[i].startsWith("%"))
                 res[count++] = row[i];
         }
         return res;
@@ -73,6 +73,6 @@ public final class TableDeduplicator implements Table {
                     TableDeduplicator::newer));
         }
 
-        return unique.values().stream().map(r -> new TableRow(r.table(), filterRow(r.row())));
+        return unique.values().stream().map(r -> new TableRow(this, filterRow(r.row())));
     }
 }

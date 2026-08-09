@@ -64,20 +64,22 @@ TABLES=(
     destinationdisplayvariants
     stopplace_names
 )
-
 SCHEMA=netex
+JOBS=8
 
-INPUT=$1
+INPUT=${1:-netex.zip}
 
 load_table() {
-    table=$1
+    local table="$1"
 
-    unzip -p ${INPUT} ${table}.csv | \
-        psql -c "TRUNCATE ${SCHEMA}.${table}; COPY ${SCHEMA}.${table} FROM STDIN (FORMAT csv, HEADER, ON_ERROR ignore)"
+    unzip -p "$INPUT" "${table}.csv" |
+        psql -v ON_ERROR_STOP=1 \
+            -c "TRUNCATE ${SCHEMA}.${table};
+                COPY ${SCHEMA}.${table}
+                FROM STDIN (FORMAT csv, HEADER);"
 }
 
-for table in ${TABLES[@]}; do
-    load_table ${table} &
-done
+export -f load_table
+export INPUT SCHEMA
 
-wait
+parallel --jobs "$JOBS" load_table ::: "${TABLES[@]}"

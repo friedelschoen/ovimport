@@ -1,67 +1,40 @@
 package nl.halteradar.table;
 
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import com.opencsv.CSVWriter;
 
-public class CSVTableSink extends CSVWriter implements TableSink<CSVTableSink, CSVTableSink> {
-    private final Path path;
-    private final Table table;
-    private final Writer writer;
+public class CSVTableSink<T extends TableSink<T>> extends CSVWriter implements TableSink<T> {
+    final Table table;
+    final boolean skipHeader;
 
-    private boolean headerWritten;
-    private int rowCount = 0;
+    boolean headerWritten;
+    int rowCount = 0;
 
-    public CSVTableSink(Table table, Path path, Writer writer, boolean skipHeader) {
-
+    public CSVTableSink(Table table, Writer writer, boolean skipHeader) {
         super(writer);
 
         this.table = table;
-        this.path = path;
-        this.writer = writer;
+        this.skipHeader = skipHeader;
         this.headerWritten = skipHeader;
     }
 
-    public CSVTableSink(Table table, Path path, Writer writer) {
-        this(table, path, writer, false);
-    }
-
-    public CSVTableSink(Table table, Path path, boolean skipHeader)
-            throws IOException {
-
-        this(table, path, new FileWriter(path.toFile(), false), skipHeader);
-    }
-
-    public CSVTableSink(Table table, Path path)
-            throws IOException {
-
-        this(table, path, false);
+    public CSVTableSink(Table table, Writer writer) {
+        this(table, writer, false);
     }
 
     public Table getTable() {
         return table;
     }
 
-    public Path getPath() {
-        return path;
-    }
-
-    @Override
-    public synchronized void accept(Stream<TableRow> rows)
-            throws IOException {
-
+    public synchronized void accept(Stream<TableRow> rows) throws IOException {
         try (rows) {
             rows.sequential().forEach(row -> {
-                if (!row.table().equals(table)) {
-                    throw new ApplesOrangesException(
-                            "inconsistent tables");
+                if (!Arrays.equals(row.table().getHeader(), table.getHeader())) {
+                    throw new ApplesOrangesException("inconsistent tables: %s != %s");
                 }
 
                 if (!headerWritten) {
@@ -76,32 +49,14 @@ public class CSVTableSink extends CSVWriter implements TableSink<CSVTableSink, C
     }
 
     @Override
-    public synchronized CSVTableSink combine(
-            CSVTableSink other) {
+    public synchronized void close() throws IOException {
+        super.close();
 
-        other.finish();
-
-        try (Reader input = new FileReader(other.path.toFile())) {
-
-            input.transferTo(writer);
-
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-
-        return this;
+        System.out.printf("%s: %d rows written\n", table.getName(), rowCount);
     }
 
     @Override
-    public synchronized CSVTableSink finish() {
-        try {
-            close();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-
-        System.out.printf("%s: %d rows written\n", table.getName(), rowCount);
-
-        return this;
+    public T combine(T other) {
+        throw new UnsupportedOperationException("Unimplemented method 'combine'");
     }
 }

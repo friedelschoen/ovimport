@@ -59,8 +59,9 @@ public class NeTExTabler implements Function<CompositeFrame, Stream<Table>> {
 
         ValidBetween validity = frame.getValidBetween();
         Calendar now = new GregorianCalendar();
-        if (validity.getFromDate() != null && validity.getFromDate().toGregorianCalendar().after(now))
-            return false;
+        // if (validity.getFromDate() != null &&
+        // validity.getFromDate().toGregorianCalendar().after(now))
+        // return false;
 
         if (validity.getToDate() != null && validity.getToDate().toGregorianCalendar().before(now))
             return false;

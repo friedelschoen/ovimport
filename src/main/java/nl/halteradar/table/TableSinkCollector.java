@@ -2,6 +2,7 @@ package nl.halteradar.table;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -10,10 +11,8 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-import java.util.stream.Stream;
 
-public class TableSinkCollector<T extends TableSink<T, R>, R> implements Collector<Table, Map<Table, T>, Stream<R>> {
-
+public class TableSinkCollector<T extends TableSink<T>> implements Collector<Table, Map<Table, T>, Collection<T>> {
     private final Function<Table, T> creator;
 
     public TableSinkCollector(Function<Table, T> creator) {
@@ -52,10 +51,17 @@ public class TableSinkCollector<T extends TableSink<T, R>, R> implements Collect
     }
 
     @Override
-    public Function<Map<Table, T>, Stream<R>> finisher() {
-        return sinks -> sinks.values()
-                .stream()
-                .map(TableSink::finish);
+    public Function<Map<Table, T>, Collection<T>> finisher() {
+        return sinks -> {
+            for (T sink : sinks.values())
+                try {
+                    sink.close();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            return sinks.values();
+        };
     }
 
     @Override

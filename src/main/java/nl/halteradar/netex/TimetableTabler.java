@@ -25,7 +25,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                     });
 
         return new MemoryTable("availabilityconditions", rows,
-                "#frame_timestamp", "$availabilitycondition_id", "#version", "name", "from_date",
+                "%valid_from", "$availabilitycondition_id", "#version", "name", "from_date",
                 "to_date", "validdays", "availability");
     }
 
@@ -84,7 +84,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
         }
 
         return new MemoryTable("vehiclejourneys", rows,
-                "#frame_timestamp", "$vehiclejourney_id", "#version", "type", "derived_from",
+                "%valid_from", "$vehiclejourney_id", "#version", "type", "derived_from",
                 "journeynumber", "departuretime", "departuredayoffset",
                 "journeypattern_id", "timedemandtype_id", "vehicletype_id",
                 "operator_id", "dynamic");
@@ -119,7 +119,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
         }
 
         return new MemoryTable("vehiclejourneyconditions", rows,
-                "#frame_timestamp", "$vehiclejourney_id", "#version", "$availabilitycondition_id");
+                "%valid_from", "$vehiclejourney_id", "#version", "$availabilitycondition_id");
     }
 
     private Table journeyInterchanges(TimetableFrame frame, Long timestamp) {
@@ -138,7 +138,7 @@ class TimetableTabler extends CommonTabler<TimetableFrame> {
                     });
 
         return new MemoryTable("journeyinterchanges", rows,
-                "#frame_timestamp", "$journeyinterchange_id", "#version", "from_point", "to_point",
+                "%valid_from", "$journeyinterchange_id", "#version", "from_point", "to_point",
                 "from_journey", "to_journey");
     }
 
