@@ -63,6 +63,7 @@ TABLES=(
     timinglinks
     destinationdisplayvariants
     stopplace_names
+    passengerstopassignments
 )
 SCHEMA=netex
 JOBS=8

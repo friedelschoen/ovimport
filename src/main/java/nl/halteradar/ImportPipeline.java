@@ -21,10 +21,10 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 
-import nl.bisonnl.chb.Export;
 import nl.bisonnl.netex.PublicationDelivery;
 import nl.halteradar.chb.CHBTabler;
 import nl.halteradar.netex.NeTExTabler;
+import nl.halteradar.psa.PSATabler;
 import nl.halteradar.table.CSVTable;
 import nl.halteradar.table.CSVTableSink;
 import nl.halteradar.table.CSVFileTableSink;
@@ -36,8 +36,20 @@ import nl.halteradar.table.TableZipper;
 final class ImportPipeline {
     private final JAXBContext context;
 
+    private static final QName NETEX_ROOT = new QName("http://www.netex.org.uk/netex", "PublicationDelivery");
+    // Some CXX NeTEx exports the default namespace incorrectly as `xmlns:None`
+    // Therefore there is no default namespace given.
+    private static final QName NETEX_ROOT_NO_NS = new QName("", "PublicationDelivery");
+
+    private static final QName CHB_ROOT = new QName("http://bison.connekt.nl/tmi8/chb/msg", "export");
+
+    private static final QName PSA_ROOT = new QName("", "export");
+
     ImportPipeline() throws JAXBException {
-        context = JAXBContext.newInstance(PublicationDelivery.class, Export.class);
+        context = JAXBContext.newInstance(
+                PublicationDelivery.class,
+                nl.bisonnl.chb.Export.class,
+                nl.bisonnl.psa.Export.class);
     }
 
     private Stream<Table> toTableStream(String filename) {
@@ -63,45 +75,47 @@ final class ImportPipeline {
 
                 Unmarshaller unmarshaller = context.createUnmarshaller();
 
-                switch (root.getLocalPart()) {
-                    case "PublicationDelivery": {
-                        var element = unmarshaller.unmarshal(reader, PublicationDelivery.class);
+                if (root.equals(NETEX_ROOT) || root.equals(NETEX_ROOT_NO_NS)) {
+                    var element = unmarshaller.unmarshal(reader, PublicationDelivery.class);
 
-                        var publication = element.getValue();
+                    var publication = element.getValue();
 
-                        if (publication.getDataObjects() == null)
-                            return Stream.empty();
+                    if (publication.getDataObjects() == null)
+                        return Stream.empty();
 
-                        /*
-                         * Parallelism is already at file level.
-                         */
-                        return publication
-                                .getDataObjects()
-                                .getCompositeFrame()
-                                .stream()
-                                .flatMap(new NeTExTabler(publication));
-                    }
-                    case "export": {
-                        var element = unmarshaller.unmarshal(reader, Export.class);
+                    /*
+                     * Parallelism is already at file level.
+                     */
+                    return publication
+                            .getDataObjects()
+                            .getCompositeFrame()
+                            .stream()
+                            .flatMap(new NeTExTabler(publication));
 
-                        var export = element.getValue();
+                } else if (root.equals(CHB_ROOT)) {
+                    var element = unmarshaller.unmarshal(reader, nl.bisonnl.chb.Export.class);
 
-                        return new CHBTabler().apply(export);
-                    }
-                    default:
-                        throw new IllegalArgumentException(
-                                "unsupported XML root " + root
-                                        + " in " + filename);
+                    var export = element.getValue();
+
+                    return new CHBTabler().apply(export);
+                } else if (root.equals(PSA_ROOT)) {
+                    var element = unmarshaller.unmarshal(reader, nl.bisonnl.psa.Export.class);
+
+                    var export = element.getValue();
+
+                    return new PSATabler().apply(export);
+                } else {
+                    throw new IllegalArgumentException(
+                            "unsupported XML root " + root
+                                    + " in " + filename);
                 }
             } finally {
                 reader.close();
             }
 
-        } catch (
-                IOException
-                | XMLStreamException
-                | FactoryConfigurationError
-                | JAXBException e) {
+        } catch (IOException | XMLStreamException | FactoryConfigurationError |
+
+                JAXBException e) {
 
             throw new IllegalStateException(
                     "failed to parse " + filename, e);

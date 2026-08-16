@@ -95,6 +95,24 @@
               <strict>false</strict>
             </configuration>
           </execution>
+          <execution>
+            <id>generate-psa</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <schemaDirectory>src/main/resources/xsd/psa</schemaDirectory>
+              <schemaIncludes>
+                <include>passengerstopassignment.xsd</include>
+              </schemaIncludes>
+              <generatePackage>nl.bisonnl.psa</generatePackage>
+              <generateDirectory>
+                ${project.build.directory}/generated-sources/xjc/psa
+              </generateDirectory>
+              <extension>true</extension>
+              <strict>false</strict>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>
